@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>V12 - Experiência Imersiva Pagaleve</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body { margin: 0; background: radial-gradient(circle, #001f3f 0%, #000 100%); overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+        #ui-layer { position: absolute; top: 20px; left: 20px; color: #00d4ff; z-index: 100; text-shadow: 0 0 10px #00d4ff; }
+        .checkout-card { position: absolute; bottom: 50px; right: 50px; background: rgba(0, 40, 80, 0.8); padding: 20px; border-radius: 15px; border: 1px solid #00d4ff; backdrop-filter: blur(10px); color: white; width: 300px; }
+        input { width: 100%; margin: 10px 0; padding: 10px; background: #000; border: 1px solid #00d4ff; color: #fff; border-radius: 5px; }
+        button { width: 100%; padding: 12px; background: #00d4ff; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #fff; color: #000; box-shadow: 0 0 20px #00d4ff; }
+    </style>
+</head>
+<body>
+    <div id="ui-layer">
+        <h1>SISTEMA V12 OPERACIONAL</h1>
+        <p>CONEXÃO SEGURA COM PAGALEVE ATIVA</p>
+    </div>
+
+    <div class="checkout-card">
+        <h3>⚡ PIX PARCELADO V12</h3>
+        <p id="product-name">Travesseiro de Seda Premium</p>
+        <input type="text" id="cpf" placeholder="Seu CPF">
+        <input type="text" id="cep" placeholder="Seu CEP">
+        <button onclick="processarVenda()">FINALIZAR AGORA</button>
+    </div>
+
+    <script>
+        // Cenário 3D com Three.js
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Geometria de Autoridade (O Objeto Flutuante)
+        const geometry = new THREE.OctahedronGeometry(2, 0);
+        const material = new THREE.MeshPhongMaterial({ color: 0x00d4ff, wireframe: true, emissive: 0x0044ff });
+        const object = new THREE.Mesh(geometry, material);
+        scene.add(object);
+
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            object.rotation.y += 0.01;
+            object.rotation.x += 0.005;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // INTEGRAÇÃO COM A API DO ROBÔ
+        async function processarVenda() {
+            const cpf = document.getElementById('cpf').value;
+            const cep = document.getElementById('cep').value;
+            
+            alert("V12 PROCESSANDO: Autenticando na Pagaleve...");
+            
+            // Aqui a Lambda entra em ação com suas chaves!
+            const res = await fetch('SUA_LAMBDA_URL', {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    apiKey: "01KF10NWVS30NQGHEJ99SFSBCS",
+                    cpf: cpf,
+                    cep: cep,
+                    produto: "Travesseiro de Seda"
+                })
+            });
+        }
+    </script>
+
+<SCRIPT>
+// BANCO DE DADOS DE DESTINOS V12
+const DESTINOS = {
+    VITRINE: "https://loja.infinitepay.io/partner12",
+    LOJA_DROPPFY: "https://loja.infinitepay.io/droppfy",
+    CARTAO_DIGITAL: "https://taggo.io/partner",
+    PRODUTO_DIRETO: "https://pay.kiwify.com.br/CrMRKeP" // Ex: Produto específico Kiwify
+};
+
+async function processarIntencaoV12(msgCliente, nomeCliente) {
+    const texto = msgCliente.toLowerCase();
+    let resposta = "";
+    let linkFinal = "";
+
+    // Lógica de Decisão baseada em IA
+    if (texto.includes("loja") || texto.includes("catálogo") || texto.includes("produtos")) {
+        resposta = `Perfeito, ${nomeCliente}! Preparei uma vitrine exclusiva para você ver todos os nossos itens.`;
+        linkFinal = DESTINOS.LOJA_DROPPFY;
+    } 
+    else if (texto.includes("comprar") || texto.includes("pagar") || texto.includes("preço")) {
+        resposta = `Excelente escolha! Preparei o seu checkout seguro aqui. Você pode parcelar no Pix ou Cartão:`;
+        linkFinal = DESTINOS.PRODUTO_DIRETO;
+    }
+    else if (texto.includes("contato") || texto.includes("quem são")) {
+        resposta = `Aqui estão todas as nossas redes e contatos oficiais, ${nomeCliente}:`;
+        linkFinal = DESTINOS.CARTAO_DIGITAL;
+    }
+    else {
+        // Padrão: Vitrine Partner
+        resposta = `Olá ${nomeCliente}! Veja as ofertas especiais que separei para você hoje:`;
+        linkFinal = DESTINOS.VITRINE;
+    }
+
+    return { mensagem: resposta, link: linkFinal };
+}
+
+</SCRIPT>
+
+
+  </body>
+</html>
