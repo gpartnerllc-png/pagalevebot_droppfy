@@ -124,6 +124,25 @@
         }
     </script>
 
+    <script>
+    // 1. Bloqueia o Clique Direito
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // 2. Bloqueia Atalhos de Teclado (F12, Ctrl+U, Ctrl+Shift+I)
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) return false; // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+    };
+
+    // 3. Anti-Debugger (Trava o console se for aberto)
+    setInterval(function() {
+        debugger;
+    }, 100);
+</script>
+
 <SCRIPT>
 // BANCO DE DADOS DE DESTINOS V12
 const DESTINOS = {
