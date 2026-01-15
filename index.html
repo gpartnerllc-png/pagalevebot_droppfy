@@ -138,6 +138,11 @@
         </div>
     </div>
 
+     <div id="vanta-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+
+<div id="root">
+    </div>
+
     <script>
         // Inicia o Fundo Neural
         VANTA.NET({ el: "#vanta-bg", mouseControls: true, color: 0x00d4ff, backgroundColor: 0x000000 });
@@ -192,6 +197,27 @@
         }
     </script>
 
+     <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        VANTA.NET({
+            el: "#vanta-canvas", // Alvo corrigido (não empurra o painel)
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0xffa500,        // LARANJA OURO (Luz do Sol)
+            backgroundColor: 0x050505, // PRETO ESPACIAL (Universo)
+            points: 18.00,          // Mais robusto
+            maxDistance: 22.00,
+            spacing: 14.00,
+            showDots: true          // PONTOS BRANCO AUTÊNTICO (Estrelas)
+        });
+    });
+</script>
+
     <script>      
         const response = await fetch(URL_LAMBDA, {
     method: 'POST',
@@ -227,12 +253,7 @@
 
             status.innerText = "⚡ AUTENTICANDO NA PAGALEVE...";
             
-            try {
-                const response = await fetch('https://4djefisdvvgqv4jl3j5x35mssi0vxfmv.lambda-url.sa-east-1.on.aws/', {
-                    method: 'POST',
-                    body: JSON.stringify({ cpf, cep })
-                });
-                const data = await response.json();
+            const data = await response.json();
                 if(data.checkoutUrl) window.location.href = data.checkoutUrl;
             } catch (e) {
                 status.innerText = "❌ ERRO DE CONEXÃO. TENTE NOVAMENTE.";
@@ -275,17 +296,7 @@
             
             alert("V12 PROCESSANDO: Autenticando na Pagaleve...");
             
-            // Aqui a Lambda entra em ação com suas chaves!
-            const res = await fetch('SUA_LAMBDA_URL', {
-                method: 'POST',
-                body: JSON.stringify({ 
-                    apiKey: "01KF10NWVS30NQGHEJ99SFSBCS",
-                    cpf: cpf,
-                    cep: cep,
-                    produto: "Loja on"
-                })
-            });
-        }
+           
     </script>
 
              <script>
