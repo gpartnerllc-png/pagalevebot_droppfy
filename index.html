@@ -163,57 +163,69 @@
             v = v.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
             e.target.value = v;
         });
-
-        async function enviarParaV12() {
-            const status = document.getElementById('status');
-            const cpf = document.getElementById('cpf').value;
-            const cep = document.getElementById('cep').value;
-
-            if(cpf.length < 14) { alert("CPF incompleto"); return; }
-
-            status.innerText = "⚡ DROPPFY IA: PROCESSANDO NA REDE...";
-            
-            try {
-                // Link oficial da sua Lambda (visto no print image_970b0b.png)
-                const URL_LAMBDA = 'https://4djefisdvvgqv4jl3j5x35mssi0vxfmv.lambda-url.sa-east-1.on.aws/';
-                
-                const response = await fetch(URL_LAMBDA, {
-                    method: 'POST',
-                    mode: 'no-cors', // Importante para evitar erro de conexão simples
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cpf, cep, token: "01KF10NWVS30NQGHEJ99SFSBCS" })
-                });
-
-                status.innerText = "✅ SOLICITAÇÃO ENVIADA COM SUCESSO!";
-                setTimeout(() => {
-                    window.location.href = "https://loja.infinitepay.io/droppfy";
-                }, 1500);
-
-            } catch (err) {
-                status.innerText = "❌ ERRO DE CONEXÃO. VERIFIQUE A LAMBDA.";
-                console.error(err);
-            }
-        }
     </script>
 
-     <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        VANTA.NET({
-            el: "#vanta-canvas", // Alvo corrigido (não empurra o painel)
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 700.00,
-            minWidth: 700.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0xffa500,        // LARANJA OURO (Luz do Sol)
-            backgroundColor: 0x070707, // PRETO ESPACIAL (Universo)
-            points: 18,00,          // Mais robusto
-            maxDistance: 25.00,
-            spacing: 12.00,
-            showDots: true          // PONTOS BRANCO AUTÊNTICO (Estrelas)
+     
+<script>
+async function finalizarAgoraV12() {
+    const btn = document.querySelector('button');
+    btn.innerText = "IA PROCESSANDO...";
+
+    const dadosReal = {
+        cpf: document.getElementById('cpf').value,
+        cep: document.getElementById('cep').value,
+        valor: "12450.00", // Valor real do sistema
+        nome: "CLIENTE V12"
+    };
+
+    try {
+        const response = await fetch('https://mxkyrbqcwpcoqkhshtqjrfonvu0dwchv.lambda-url.sa-east-1.on.aws/', {
+            method: 'POST',
+            body: JSON.stringify(dadosReal)
         });
+
+        const res = await response.json();
+        
+        // Se a ponte com a Pagaleve funcionar, ele redireciona sozinho
+        if (res.url) {
+            window.location.href = res.url;
+        } else {
+            alert("Erro na geração do Link Real.");
+        }
+    } catch (err) {
+        console.error("Erro de Conexão:", err);
+    }
+}
+</script>
+
+
+     <script>
+    // MOTOR VISUAL UNIFICADO V12 - UNIVERSO SOLAR
+    window.addEventListener('DOMContentLoaded', () => {
+        // Verifica se o elemento de fundo existe para evitar erro
+        const bgElement = document.querySelector("#vanta-canvas") || document.querySelector("#vanta-bg");
+        
+        if (typeof VANTA !== 'undefined' && bgElement) {
+            VANTA.NET({
+                el: bgElement,          // Alvo único e isolado
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0xffa500,        // LARANJA OURO (Luz do Sol)
+                backgroundColor: 0x070707, // PRETO ESPACIAL
+                points: 18.00,          // Robustez visual
+                maxDistance: 25.00,
+                spacing: 12.00,
+                showDots: true          // ESTRELAS BRANCAS
+            });
+            console.log("Sistema Visual V12 Ativado: Universo Solar Online.");
+        } else {
+            console.error("Erro: Elemento de fundo não encontrado ou Vanta.js não carregado.");
+        }
     });
 </script>
 
