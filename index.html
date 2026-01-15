@@ -36,19 +36,6 @@
             height: 100vh;
         }
 
-        #root {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Força o painel no centro exato */
-    z-index: 100; /* Garante que fique acima da teia azul */
-    width: 100%;
-    max-width: 400px;
-    display: flex;
-    justify-content: center;
-    pointer-events: all; /* Libera os cliques no botão */
-}
-
 #vanta-bg {
     position: fixed;
     top: 0;
@@ -113,13 +100,27 @@
         .btn-confirm:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 212, 255, 0.4); background: #fff; }
 
         #status-msg { margin-top: 20px; font-size: 0.75rem; color: #aa
+
+                     /* Centralização Total V12 */
+#root {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Puxa o painel de volta para o centro */
+    z-index: 999; /* Fica por cima de tudo */
+    width: 90%;
+    max-width: 380px;
+    pointer-events: all; /* Libera o clique no botão */
+}
+
     </style>
 </head>
     
 <body> <class="notranslate">
     <div id="vanta-canvas"></div>
     
-    <div id="root">
+  <div id="vanta-bg"></div> <div id="root">
+   </div>
 
     <div id="interface">
         <div id="ui-layer" style="margin-bottom: 20px; text-align: center;">
@@ -141,6 +142,15 @@
         // Inicia o Fundo Neural
         VANTA.NET({ el: "#vanta-bg", mouseControls: true, color: 0x00d4ff, backgroundColor: 0x000000 });
 
+         <script>
+    // Inicialização que não trava o sistema
+    VANTA.NET({
+        el: "#vanta-bg", // Alvo é o fundo, não o corpo todo
+        mouseControls: true,
+        color: 0x00d4ff,
+        backgroundColor: 0x000000,
+        points: 12.0
+    });
         // Máscaras Automáticas
         document.getElementById('cpf').addEventListener('input', e => {
             let v = e.target.value.replace(/\D/g,"");
@@ -278,26 +288,7 @@
         }
     </script>
 
-        <script>
-
-        VANTA.NET({
-            el: "body",
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x00d4ff,
-            backgroundColor: 0x000000,
-            points: 15.00,
-            maxDistance: 20.00,
-            spacing: 15.00
-        });
-    </script>
-
-        <script>
+             <script>
     // 1. Bloqueia o Clique Direito
     document.addEventListener('contextmenu', event => event.preventDefault());
 
