@@ -147,7 +147,52 @@
         }
     </script>
 
-    <script>
+          <script>
+        // Cenário 3D com Three.js
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Geometria de Autoridade (O Objeto Flutuante)
+        const geometry = new THREE.OctahedronGeometry(2, 0);
+        const material = new THREE.MeshPhongMaterial({ color: 0x00d4ff, wireframe: true, emissive: 0x0044ff });
+        const object = new THREE.Mesh(geometry, material);
+        scene.add(object);
+
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            object.rotation.y += 0.01;
+            object.rotation.x += 0.005;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // INTEGRAÇÃO COM A API DO ROBÔ
+        async function processarVenda() {
+            const cpf = document.getElementById('cpf').value;
+            const cep = document.getElementById('cep').value;
+            
+            alert("V12 PROCESSANDO: Autenticando na Pagaleve...");
+            
+            // Aqui a Lambda entra em ação com suas chaves!
+            const res = await fetch('SUA_LAMBDA_URL', {
+                method: 'POST',
+                body: JSON.stringify({ 
+                    apiKey: "01KF10NWVS30NQGHEJ99SFSBCS",
+                    cpf: cpf,
+                    cep: cep,
+                    produto: "Loja on"
+                })
+            });
+        }
+    </script>
 
         <script>
     // 1. Bloqueia o Clique Direito
