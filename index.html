@@ -98,8 +98,51 @@
     </div>
 
     <script>
+        // Inicia o Fundo Neural
+        VANTA.NET({ el: "#vanta-bg", mouseControls: true, color: 0x00d4ff, backgroundColor: 0x000000 });
 
+        // Máscaras Automáticas
+        document.getElementById('cpf').addEventListener('input', e => {
+            let v = e.target.value.replace(/\D/g,"");
+            v = v.replace(/(\d{3})(\d)/,"$1.$2");
+            v = v.replace(/(\d{3})(\d)/,"$1.$2");
+            v = v.replace(/(\d{3})(\d{1,2})$/,"$1-$2");
+            e.target.value = v;
+        });
 
+        async function enviarParaV12() {
+            const status = document.getElementById('status');
+            const cpf = document.getElementById('cpf').value;
+            const cep = document.getElementById('cep').value;
+
+            if(cpf.length < 14) { alert("CPF incompleto"); return; }
+
+            status.innerText = "⚡ DROPPFY IA: PROCESSANDO NA REDE...";
+            
+            try {
+                // Link oficial da sua Lambda (visto no print image_970b0b.png)
+                const URL_LAMBDA = 'https://4djefisdvvgqv4jl3j5x35mssi0vxfmv.lambda-url.sa-east-1.on.aws/';
+                
+                const response = await fetch(URL_LAMBDA, {
+                    method: 'POST',
+                    mode: 'no-cors', // Importante para evitar erro de conexão simples
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cpf, cep, token: "01KF10NWVS30NQGHEJ99SFSBCS" })
+                });
+
+                status.innerText = "✅ SOLICITAÇÃO ENVIADA COM SUCESSO!";
+                setTimeout(() => {
+                    window.location.href = "https://loja.infinitepay.io/droppfy";
+                }, 1500);
+
+            } catch (err) {
+                status.innerText = "❌ ERRO DE CONEXÃO. VERIFIQUE A LAMBDA.";
+                console.error(err);
+            }
+        }
+    </script>
+
+    <script>      
         const response = await fetch(URL_LAMBDA, {
     method: 'POST',
     headers: {
@@ -145,7 +188,8 @@
                 status.innerText = "❌ ERRO DE CONEXÃO. TENTE NOVAMENTE.";
             }
         }
-    </script>
+   
+</script>
 
           <script>
         // Cenário 3D com Three.js
