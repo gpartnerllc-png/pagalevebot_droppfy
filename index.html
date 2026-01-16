@@ -16,7 +16,14 @@
     </head>
 
      <head>
- <link rel="icon" type="image/ico" href="https://a0.awsstatic.com/libra-css/images/site/fav/favicon.ico">
+ <link rel="icon" type="image/png" href="https://i.ibb.co/LST68m9/ppix.jpg">
+<link rel="shortcut icon" type="image/png" href="https://i.ibb.co/LST68m9/ppix.jpg">
+
+<link rel="apple-touch-icon" sizes="57x57" href="https://i.ibb.co/LST68m9/ppix.jpg">
+<link rel="apple-touch-icon" sizes="72x72" href="https://i.ibb.co/LST68m9/ppix.jpg">
+<link rel="apple-touch-icon" sizes="114x114" href="https://i.ibb.co/LST68m9/ppix.jpg">
+<link rel="apple-touch-icon" sizes="144x144" href="https://i.ibb.co/LST68m9/ppix.jpg">
+
      </head>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -393,6 +400,43 @@ async function iniciarConversaFinal() {
             
            
     </script>
+
+          <script>
+// FUNÇÃO QUE ATIVA O ROBÔ AO CLICAR EM ACESSAR
+async function realizarAcesso() {
+    const cpf = document.querySelector('input[placeholder*="342"]').value;
+    const cep = document.querySelector('input[placeholder*="72915"]').value;
+    const statusLabel = document.querySelector('p:last-child'); // "AGUARDANDO CONEXÃO..."
+
+    if (!cpf || !cep) {
+        alert("Por favor, preencha o CPF e CEP para continuar.");
+        return;
+    }
+
+    statusLabel.innerText = "INICIANDO ROBÔ V12...";
+    statusLabel.style.color = "#ffa500";
+
+    try {
+        // Envia para a sua Lambda que já tem as chaves configuradas
+        const response = await fetch('SUA_URL_DA_LAMBDA_AQUI', {
+            method: 'POST',
+            body: JSON.stringify({ cpf, cep })
+        });
+
+        if (response.ok) {
+            statusLabel.innerText = "CONEXÃO ESTABELECIDA! REDIRECIONANDO...";
+            // Inicia o Scanner de documentos (Etapa 2)
+            iniciarScanner('RG_FRENTE');
+        }
+    } catch (err) {
+        statusLabel.innerText = "ERRO NA CONEXÃO. TENTE NOVAMENTE.";
+        statusLabel.style.color = "red";
+    }
+}
+
+// Conecta a função ao botão ACESSAR do seu painel
+document.querySelector('button').addEventListener('click', realizarAcesso);
+</script>
 
              <script>
     // 1. Bloqueia o Clique Direito
