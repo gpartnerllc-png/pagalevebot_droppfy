@@ -135,14 +135,14 @@
 
             <h2>⚡ PIX PARCELADO</h2>
 
-            <p style="font-size: 0.8rem; margin-bottom: 15px;">Travesseiro de Seda Premium</p>
+            <p style="font-size: 0.8rem; margin-bottom: 15px;">PAGAMENTO EM 4X</p>
 
             <input type="text" id="cpf" placeholder="Seu CPF">
 
             <input type="text" id="cep" placeholder="Seu CEP">
 
            <button onclick="processarVenda()" class="btn-orange w-full text-white font-black py-5 rounded-2xl shadow-xl uppercase">
-        ACESSAR PPIX
+        ACESSAR PPIX </button>
 
             <div id="status">AGUARDANDO CONEXÃO...</div>
 
@@ -407,41 +407,70 @@ async function iniciarConversaFinal() {
            
     </script>
 
-          <script>
-// FUNÇÃO QUE ATIVA O ROBÔ AO CLICAR EM ACESSAR
+<script>
+// CONFIGURAÇÃO DE AUTORIDADE MÁXIMA
+const URL_LAMBDA = "https://mxkyrbqcwpcoqkhshtqjrfonvu0dwchv.lambda-url.sa-east-1.on.aws/";
+const ARN_IA = "arn:aws:lambda:sa-east-1:523655709257:function:D_IA_PAGLEVE";
+
 async function realizarAcesso() {
-    const cpf = document.querySelector('input[placeholder*="342"]').value;
-    const cep = document.querySelector('input[placeholder*="72915"]').value;
-    const statusLabel = document.querySelector('p:last-child'); // "AGUARDANDO CONEXÃO..."
+    // 1. Captura pelos IDs exatos que você definiu no HTML
+    const cpf = document.getElementById('cpf')?.value;
+    const cep = document.getElementById('cep')?.value;
+    const statusLabel = document.getElementById('status');
 
     if (!cpf || !cep) {
-        alert("Por favor, preencha o CPF e CEP para continuar.");
+        alert("Cristian, preencha os dados para validar o acesso no Back-end.");
         return;
     }
 
-    statusLabel.innerText = "INICIANDO ROBÔ V12...";
-    statusLabel.style.color = "#ffa500";
+    statusLabel.innerText = "⚡ SINCRONIZANDO COM D_IA_PAGLEVE...";
+    statusLabel.style.color = "#00d4ff";
 
     try {
-        // Envia para a sua Lambda que já tem as chaves configuradas
-        const response = await fetch('SUA_URL_DA_LAMBDA_AQUI', {
+        // 2. DISPARO REAL PARA O BACK-END
+        const response = await fetch(URL_LAMBDA, {
             method: 'POST',
-            body: JSON.stringify({ cpf, cep })
+            mode: 'cors', // Permite que o Front fale com o Back-end AWS
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                cpf: cpf, 
+                cep: cep,
+                v12_auth: "20260112PB1F252F75254", // Sua Access Key
+                arn_origem: ARN_IA
+            })
         });
 
+        const data = await response.json();
+
+        // 3. SAÍDA DO FRONT-END (Ação Pós-Cadastro)
         if (response.ok) {
-            statusLabel.innerText = "CONEXÃO ESTABELECIDA! REDIRECIONANDO...";
-            // Inicia o Scanner de documentos (Etapa 2)
-            iniciarScanner('RG_FRENTE');
+            statusLabel.innerText = "✅ CADASTRADO COM SUCESSO!";
+            
+            // Se a IA devolver o link da Pagaleve, redireciona agora
+            if (data.checkoutUrl || data.url) {
+                window.location.href = data.checkoutUrl || data.url;
+            } else {
+                // Se não devolver link, ele segue para o seu Scanner interno
+                alert("Cadastro Realizado no Back-end. Iniciando Scanner...");
+                if (typeof iniciarScanner === "function") iniciarScanner('RG_FRENTE');
+            }
+        } else {
+            statusLabel.innerText = "❌ ERRO NO BACK-END. VERIFIQUE A LAMBDA.";
         }
+
     } catch (err) {
-        statusLabel.innerText = "ERRO NA CONEXÃO. TENTE NOVAMENTE.";
-        statusLabel.style.color = "red";
+        console.error("Erro de Conexão:", err);
+        statusLabel.innerText = "❌ FALHA NA AWS. O BACK-END NÃO RESPONDEU.";
     }
 }
 
-// Conecta a função ao botão ACESSAR do seu painel
-document.querySelector('button').addEventListener('click', realizarAcesso);
+// 4. GARANTE QUE O BOTÃO ESTEJA CONECTADO
+document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.querySelector('button');
+    if (btn) {
+        btn.onclick = realizarAcesso;
+    }
+});
 </script>
 
              <script>
