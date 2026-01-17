@@ -408,62 +408,68 @@ async function iniciarConversaFinal() {
     </script>
 
 <script>
-// CONFIGURAÇÃO DE AUTORIDADE MÁXIMA
+// CONFIGURAÇÃO DE AUTORIDADE MÁXIMA - BACK-END CERTEIRO
 const URL_LAMBDA = "https://mxkyrbqcwpcoqkhshtqjrfonvu0dwchv.lambda-url.sa-east-1.on.aws/";
 const ARN_IA = "arn:aws:lambda:sa-east-1:523655709257:function:D_IA_PAGLEVE";
 
 async function realizarAcesso() {
-    // 1. Captura pelos IDs exatos que você definiu no HTML
+    // Captura os dados reais digitados por você ou pelo cliente
     const cpf = document.getElementById('cpf')?.value;
     const cep = document.getElementById('cep')?.value;
     const statusLabel = document.getElementById('status');
+    const urlPedido = document.getElementById('url-pedido')?.value; // Pega o link da InfinitePay se houver
 
     if (!cpf || !cep) {
-        alert("Cristian, preencha os dados para validar o acesso no Back-end.");
+        alert("Cristian, preencha CPF e CEP para iniciar o cadastro no Back-end.");
         return;
     }
 
-    statusLabel.innerText = "⚡ SINCRONIZANDO COM D_IA_PAGLEVE...";
-    statusLabel.style.color = "#00d4ff";
+    if(statusLabel) {
+        statusLabel.innerText = "⚡ INICIANDO CADASTRO NA IA...";
+        statusLabel.style.color = "#ffa500";
+    }
 
     try {
-        // 2. DISPARO REAL PARA O BACK-END
+        // DISPARO REAL PARA A AWS - SAINDO DO FRONT-END
         const response = await fetch(URL_LAMBDA, {
             method: 'POST',
-            mode: 'cors', // Permite que o Front fale com o Back-end AWS
+            mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 cpf: cpf, 
                 cep: cep,
-                v12_auth: "20260112PB1F252F75254", // Sua Access Key
+                url_pedido: urlPedido || "https://loja.infinitepay.io/droppfy",
+                v12_auth: "20260112PB1F252F75254",
                 arn_origem: ARN_IA
             })
         });
 
         const data = await response.json();
 
-        // 3. SAÍDA DO FRONT-END (Ação Pós-Cadastro)
         if (response.ok) {
-            statusLabel.innerText = "✅ CADASTRADO COM SUCESSO!";
+            if(statusLabel) statusLabel.innerText = "✅ CADASTRO REALIZADO! REDIRECIONANDO...";
             
-            // Se a IA devolver o link da Pagaleve, redireciona agora
+            // Se a IA retornar o link da Pagaleve (Checkout), ele pula para lá
             if (data.checkoutUrl || data.url) {
                 window.location.href = data.checkoutUrl || data.url;
             } else {
-                // Se não devolver link, ele segue para o seu Scanner interno
-                alert("Cadastro Realizado no Back-end. Iniciando Scanner...");
+                // Se for apenas cadastro de dados, ele abre o Scanner de RG
+                alert("Cadastro Concluído na AWS. Inicie a captura dos documentos.");
                 if (typeof iniciarScanner === "function") iniciarScanner('RG_FRENTE');
             }
         } else {
-            statusLabel.innerText = "❌ ERRO NO BACK-END. VERIFIQUE A LAMBDA.";
+            if(statusLabel) statusLabel.innerText = "❌ ERRO NO BACK-END AWS.";
         }
 
     } catch (err) {
         console.error("Erro de Conexão:", err);
-        statusLabel.innerText = "❌ FALHA NA AWS. O BACK-END NÃO RESPONDEU.";
+        if(statusLabel) statusLabel.innerText = "❌ FALHA NA CONEXÃO COM A IA.";
     }
 }
+</script>
 
+     <script>
+          
 // 4. GARANTE QUE O BOTÃO ESTEJA CONECTADO
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.querySelector('button');
@@ -491,6 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
         debugger;
     }, 100);
 </script>
+     
     </script>
 </body>
 </html>
