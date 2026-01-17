@@ -247,6 +247,47 @@ async function finalizarAgoraV12() {
     });
 </script>
 
+
+     <script>
+// Configurações de Autoridade V12
+const URL_LAMBDA = "https://mxkyrbqcwpcoqkhshtqjrfonvu0dwchv.lambda-url.sa-east-1.on.aws/";
+const ARN_PAGALEVE = "arn:aws:lambda:sa-east-1:523655709257:function:D_IA_PAGLEVE";
+
+async function realizarAcessoV12() {
+    // Captura dos inputs do seu Dashboard
+    const cpfInput = document.querySelector('input[placeholder*="342"]')?.value;
+    const cepInput = document.querySelector('input[placeholder*="72915"]')?.value;
+
+    console.log("Iniciando Conexão com D_IA_PAGLEVE...");
+
+    try {
+        const response = await fetch(URL_LAMBDA, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                cpf: cpfInput, 
+                cep: cepInput,
+                v12_auth: "20260112PB1F252F75254", // Sua Access Key de autoridade
+                arn_origem: ARN_PAGALEVE
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("✅ Autoridade Confirmada na AWS!");
+            // Aqui segue para a Etapa 2 (Scanner) que está no seu front
+            iniciarScanner('RG_FRENTE');
+        } else {
+            console.error("Falha na autenticação da Lambda.");
+        }
+    } catch (error) {
+        console.error("Erro de conexão com o Back-end:", error);
+    }
+}
+</script>
+
     <script>      
         const response = await fetch(URL_LAMBDA, {
     method: 'POST',
